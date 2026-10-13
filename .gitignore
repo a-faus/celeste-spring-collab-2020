@@ -4,6 +4,7 @@
 !README.md
 !.github/
 !.github/workflows/
+!.github/workflows/**
 !public-site/
 !public-site/**
 !game-assets/
