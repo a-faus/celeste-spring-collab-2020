@@ -32,35 +32,61 @@ async function destination(root, path) {
 export async function migrateSharedSaves(origin) {
   const shared = await origin.getDirectoryHandle(SHARED_NAMESPACE, {create:true});
   const saves = await shared.getDirectoryHandle('Saves', {create:true});
-  try { await shared.getFileHandle('.MigrationComplete-v1'); return saves; }
-  catch (error) { if (error.name !== 'NotFoundError') throw error; }
-  const snapshots = await shared.getDirectoryHandle('MigrationBackups', {create:true});
+  let firstMigration = false;
+  try { await shared.getFileHandle('.MigrationComplete-v1'); }
+  catch (error) { if (error.name !== 'NotFoundError') throw error; firstMigration = true; }
+  // Preserve the original folders once, but continue importing newer legacy
+  // saves on later launches. This recovers progress left in a private mode
+  // folder by an older build without letting an older copy replace the shared
+  // save that is already in use.
+  const snapshots = firstMigration ? await shared.getDirectoryHandle('MigrationBackups', {create:true}) : null;
   const candidates = new Map();
-  // Finish and verify BOTH backups before modifying the shared directory.
+  // Finish and verify both backups before modifying the shared directory.
   for (const mode of LEGACY_MODES) {
     let previous;
     try {
       const root = await origin.getDirectoryHandle(`public-celeste-${mode}-v1`);
       previous = await (await root.getDirectoryHandle('Celeste')).getDirectoryHandle('Saves');
     } catch (error) { if (error.name === 'NotFoundError') continue; throw error; }
-    const backup = await snapshots.getDirectoryHandle(mode, {create:true});
+    const backup = snapshots ? await snapshots.getDirectoryHandle(mode, {create:true}) : null;
     for (const entry of await collect(previous)) {
-      const bytes = await entry.file.arrayBuffer();
-      const target = await destination(backup, entry.path);
-      await write(target.folder, target.name, bytes);
-      const verified = await (await target.folder.getFileHandle(target.name)).getFile();
-      const copy = new Uint8Array(await verified.arrayBuffer()), original = new Uint8Array(bytes);
-      if (copy.length !== original.length || copy.some((byte,index) => byte !== original[index])) throw new Error('Save backup verification failed. Your original saves were not changed.');
+      if (backup) {
+        const bytes = await entry.file.arrayBuffer();
+        const target = await destination(backup, entry.path);
+        await write(target.folder, target.name, bytes);
+        const verified = await (await target.folder.getFileHandle(target.name)).getFile();
+        const copy = new Uint8Array(await verified.arrayBuffer()), original = new Uint8Array(bytes);
+        if (copy.length !== original.length || copy.some((byte,index) => byte !== original[index])) throw new Error('Save backup verification failed. Your original saves were not changed.');
+      }
       const older = candidates.get(entry.path);
       if (!older || entry.file.lastModified > older.file.lastModified) candidates.set(entry.path, entry);
     }
   }
   for (const entry of candidates.values()) {
     const target = await destination(saves, entry.path);
-    await write(target.folder, target.name, await entry.file.arrayBuffer());
+    let current;
+    try { current = await (await target.folder.getFileHandle(target.name)).getFile(); }
+    catch (error) { if (error.name !== 'NotFoundError') throw error; }
+    if (!current || entry.file.lastModified > current.lastModified) {
+      await write(target.folder, target.name, await entry.file.arrayBuffer());
+    }
   }
-  await write(shared, '.MigrationComplete-v1', 'Original mode saves preserved; newest conflicting file selected.');
+  if (firstMigration) await write(shared, '.MigrationComplete-v1', 'Original mode saves preserved; newest conflicting file selected.');
   return saves;
+}
+
+async function mergeMissingFiles(source, target) {
+  for await (const [name, handle] of source.entries()) {
+    if (handle.kind === 'directory') {
+      const child = await target.getDirectoryHandle(name, {create:true});
+      await mergeMissingFiles(handle, child);
+      continue;
+    }
+    let existing;
+    try { existing = await target.getFileHandle(name); }
+    catch (error) { if (error.name !== 'NotFoundError') throw error; }
+    if (!existing) await write(target, name, await (await handle.getFile()).arrayBuffer());
+  }
 }
 
 export async function installSaveRouting(mode) {
@@ -78,14 +104,20 @@ export async function installSaveRouting(mode) {
   // Keep a physical entry for the WASM filesystem's type checks. Its old files
   // are preserved, but all subsequent access and listings use the shared handle.
   await getDirectory.call(celeste, 'Saves', {create:true});
-  const mods = mode === 'spring-collab'
-    ? await getDirectory.call(origin, 'public-celeste-spring-collab-mods-v1', {create:true})
-    : null;
+  // Spring Collab archives are extracted under the mode root's Mods/ folder.
+  // Keep Everest pointed at that exact folder; an earlier build redirected
+  // the game to a different empty OPFS directory, making it silently boot
+  // plain Celeste despite successfully downloading every mod.
+  const mods = mode === 'spring-collab' ? await getDirectory.call(root, 'Mods', {create:true}) : null;
   if (mods) {
-    // Preserve empty physical entries for the game filesystem's type checks;
-    // both historical mod paths below resolve to one private package folder.
-    await getDirectory.call(root, 'Mods', {create:true});
+    // Keep a physical entry for the WASM filesystem's type checks. Migrate any
+    // files a previous build exposed through its separate folder, but leave
+    // that original folder intact and never overwrite installed package files.
     await getDirectory.call(celeste, 'Mods', {create:true});
+    let previousMods;
+    try { previousMods = await getDirectory.call(origin, 'public-celeste-spring-collab-mods-v1'); }
+    catch (error) { if (error.name !== 'NotFoundError') throw error; }
+    if (previousMods && !await previousMods.isSameEntry(mods)) await mergeMissingFiles(previousMods, mods);
   }
   const shared = await getDirectory.call(origin, SHARED_NAMESPACE, {create:true});
   const saves = await getDirectory.call(shared, 'Saves', {create:true});

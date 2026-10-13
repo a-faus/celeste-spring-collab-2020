@@ -112,85 +112,85 @@
     "files": 1215
   },
   "springCollab": {
-    "id": "spring-collab-v1.7.10",
+    "id": "spring-collab-v1.7.10-everest-4607-collabutils2-1.6.14-v16-detour-context-compat",
     "chunks": [
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-000.bin",
         "size": 41943040,
-        "sha256": "7015ebeda140f2a05b741fed6baa5ea8fa221372292eec58b30bd597a39694e3"
+        "sha256": "bee5a8a2325ecc99b8436fb302477f9e8df4f8bb2be830e5190411eb251f69b6"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-001.bin",
         "size": 41943040,
-        "sha256": "cdebb9391e78da29bfc134a424396185a299af8fb5fa7bfd395712e156ae0537"
+        "sha256": "3cc31abba371af9bffa5c976aa3346613392759ca33e5d29c68b1a491a5abfda"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-002.bin",
         "size": 41943040,
-        "sha256": "defdea34260e755237a302d398ffa817b15cdf35a3c1dd1b5e817d20e7f9d0fd"
+        "sha256": "717a7dc3b94d8d5ad9c131935272728d8f4d849ebe3d1f689d1431798c2664ee"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-003.bin",
         "size": 41943040,
-        "sha256": "232ac96b19b6c6f8e536625e8923697c097359151c6a06005b8f9b5dbf7bae98"
+        "sha256": "d38d2d6da9670b5478f45994f5a1ef373b5c7221a4aa526233f898177817c85d"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-004.bin",
         "size": 41943040,
-        "sha256": "cbf6fb50e583a7bcf710b9b1a8bc4f936b4c231be7f54d67e2fe41bb48631f23"
+        "sha256": "d5074ada96cb120e8a5e876c6e29a85a29d5349d1d1ba6bb7ddf579764657850"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-005.bin",
         "size": 41943040,
-        "sha256": "cb6ac526297416f806820d7ed33d82c981f4162c68af7d9ff3bb82aca4ae60f0"
+        "sha256": "86f12a6dfba49ee9a58b83e01b3bfd147d5917cde366b06090c39873a58f8ce9"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-006.bin",
         "size": 41943040,
-        "sha256": "7022ecbeb98e306c270e624056da7a9cc644f8e13dd567eef1f801444debc0fe"
+        "sha256": "97f1b03ad0641eac355e78628ba4cc7319254295cf67f208ab599563c1658cc2"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-007.bin",
         "size": 41943040,
-        "sha256": "aa3bccc9bf6012375a9ce8789eb526be5586081778da680aa9aec110dbf9e039"
+        "sha256": "386dc04633b49cd0eca5e66b76e08799b3efc327855e4083c8cada2bf45c8a36"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-008.bin",
         "size": 41943040,
-        "sha256": "08533b12585df01187190e30731f1d5d50cb4bc2575391a1401df19951851973"
+        "sha256": "bacc9b303ae3051722a6ff6aeb46eb69bde9ce55db8cf9e1f5a7ef35eb115b94"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-009.bin",
         "size": 41943040,
-        "sha256": "1b4cd001af9b99ffd7f92204fade4e26396283b575f77c89ab89a2eae420fc1d"
+        "sha256": "1d4f5e81e7968797777b6e82b37d9451cf36863f7076620e960cc6cb30ffcdcf"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-010.bin",
         "size": 41943040,
-        "sha256": "6532f16538d59a5c83b27d3338cf5773a8a94360407ee2df393ea545289e497b"
+        "sha256": "14ca9e1c00b52b91ffac0535cbd956b730138a95c73aa05ecf1da7dfe4b74b0e"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-011.bin",
         "size": 41943040,
-        "sha256": "d8bd2b397ff9dc04a3e99dc200c32e18a3ebac53fad6877ca3da1e275c658cd0"
+        "sha256": "285b2717f2b6e4fbf0b6392ebb7f7896de78418824b81aac08e3ac0743bf272c"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-012.bin",
         "size": 41943040,
-        "sha256": "87de704a939727f5aee5182d1ac4066ecdb9b38298373cdd3a6c91ef7a20b372"
+        "sha256": "7e7a69b67859f02361d8daefd96d12410c7d27e58b7f18fce708bd027a879e95"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-013.bin",
         "size": 41943040,
-        "sha256": "fd53c8bcc05a6e6dd36de00a50b5399ed7e9ac287f44d50ea25965d4f53f416f"
+        "sha256": "a102e76cf0014845e1d5477cea6409a63831b727aae889aba31fb6022694dbbe"
       },
       {
         "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-014.bin",
-        "size": 12277009,
-        "sha256": "90846ac0f3e6ab0bf2212630bd42c34d9aeec7409c6ffbb7f4d6ff414a631e52"
+        "size": 11609177,
+        "sha256": "d10ab915881e4463c1ff28ddeef44fe988f8ed870d014b5276f99e6e09d18f7c"
       }
     ],
-    "bytes": 599479569,
+    "bytes": 598811737,
     "files": 77
   }
 }

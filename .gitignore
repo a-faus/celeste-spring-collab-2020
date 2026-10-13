@@ -9,3 +9,10 @@
 !public-site/**
 !game-assets/
 !game-assets/**
+!tools/
+tools/*
+!tools/FrostHelperCompat.dll
+!tools/MaxHelpingHandCompat.dll
+!tools/SpringCollab2020Compat.dll
+!tools/patch-mhh.csproj
+!tools/PatchMaxHelpingHand.cs
