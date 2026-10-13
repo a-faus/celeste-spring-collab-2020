@@ -1,0 +1,10 @@
+*
+!.gitignore
+!.gitattributes
+!README.md
+!.github/
+!.github/workflows/
+!public-site/
+!public-site/**
+!game-assets/
+!game-assets/**

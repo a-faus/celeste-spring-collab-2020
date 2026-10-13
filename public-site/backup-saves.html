@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Back up Celeste saves</title>
+  <link rel="stylesheet" href="./public.css">
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">PRIVATE, LOCAL BACKUP</p>
+    <h1>Back up your saves</h1>
+    <p>This reads the save folders for the Celeste browser sites in this browser profile, then creates a download on this PC. Nothing is uploaded.</p>
+    <button id="make-backup" class="button">Create save backup</button>
+    <p id="status" role="status" aria-live="polite">Ready. Close any running Celeste tab before backing up.</p>
+    <p><a href="./index.html">Back to game selection</a></p>
+  </main>
+  <script type="module">
+    const button = document.querySelector('#make-backup');
+    const status = document.querySelector('#status');
+    const root = await navigator.storage.getDirectory();
+    const sources = [
+      ['shared', 'public-celeste-shared-v1', ['Saves', 'MigrationBackups']],
+      ['vanilla', 'public-celeste-vanilla-v1', ['Celeste/Saves']],
+      ['randomizer', 'public-celeste-randomizer-v1', ['Celeste/Saves']],
+      ['spring-collab', 'public-celeste-spring-collab-v1', ['Celeste/Saves']]
+    ];
+    async function readFolder(folder, scope, prefix, output) {
+      for await (const [name, handle] of folder.entries()) {
+        const path = prefix ? `${prefix}/${name}` : name;
+        if (handle.kind === 'directory') await readFolder(handle, scope, path, output);
+        else {
+          const file = await handle.getFile();
+          const bytes = new Uint8Array(await file.arrayBuffer());
+          let binary = '';
+          for (let offset = 0; offset < bytes.length; offset += 32768) {
+            binary += String.fromCharCode(...bytes.subarray(offset, offset + 32768));
+          }
+          output.push({scope, path, lastModified: file.lastModified, base64: btoa(binary)});
+        }
+      }
+    }
+    async function optionalDirectory(parent, name) {
+      try { return await parent.getDirectoryHandle(name); }
+      catch (error) { if (error.name === 'NotFoundError') return null; throw error; }
+    }
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      status.textContent = 'Reading local save folders…';
+      try {
+        const files = [];
+        for (const [scope, namespace, paths] of sources) {
+          const base = await optionalDirectory(root, namespace);
+          if (!base) continue;
+          for (const path of paths) {
+            let folder = base;
+            let found = true;
+            for (const part of path.split('/')) {
+              folder = await optionalDirectory(folder, part);
+              if (!folder) { found = false; break; }
+            }
+            if (found) await readFolder(folder, scope, path, files);
+          }
+        }
+        if (!files.length) {
+          status.textContent = 'No save files were found in this browser profile.';
+          button.disabled = false;
+          return;
+        }
+        const backup = {
+          format: 'celeste-browser-save-backup-v1',
+          createdAt: new Date().toISOString(),
+          note: 'Personal browser save data. Keep this file private.',
+          files
+        };
+        const blob = new Blob([JSON.stringify(backup)], {type: 'application/json'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `celeste-saves-backup-${new Date().toISOString().slice(0,10)}.json`;
+        link.textContent = 'Download the save backup to this PC';
+        link.className = 'button secondary';
+        link.addEventListener('click', () => setTimeout(() => URL.revokeObjectURL(link.href), 30000), {once:true});
+        button.replaceWith(link);
+        status.textContent = `Found ${files.length} save file${files.length === 1 ? '' : 's'}. Click the download button to save the private backup on this PC.`;
+      } catch (error) {
+        status.textContent = `Could not read this browser's saves: ${error.message}`;
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

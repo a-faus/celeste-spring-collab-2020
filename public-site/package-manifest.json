@@ -1,0 +1,196 @@
+{
+  "base": {
+    "id": "base-v1",
+    "chunks": [
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-000.bin",
+        "size": 41943040,
+        "sha256": "bca8df757c5576474dfbde55a29cbea54a389200c9e185be72787a6fc094945f"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-001.bin",
+        "size": 41943040,
+        "sha256": "060132f3d1dfa24b3dc084dcfa2bb8e2909cfc7471f0e300dd16c8741e0167af"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-002.bin",
+        "size": 41943040,
+        "sha256": "1c525e597ca6ef9dd2f53a4e251a2f04b81be047d8d5694cfbd6282d46965fd4"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-003.bin",
+        "size": 41943040,
+        "sha256": "678ce261f6f418eec2be63a12e9318da2da32955a63ba12a73988022b800f6aa"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-004.bin",
+        "size": 41943040,
+        "sha256": "a70bd164568abca62f03be2c14bcb2fe841941201fb53b34cce7f05f954049e8"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-005.bin",
+        "size": 41943040,
+        "sha256": "d5f03c9fa107937643682125b3e684f57abca0a889e35de567f38cd828072bca"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-006.bin",
+        "size": 41943040,
+        "sha256": "0964777761ca9da1a4f8af5f36bcec657d9c9975da4efe33ec591837e08b24dd"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-007.bin",
+        "size": 41943040,
+        "sha256": "44c118bcc55f09859d1ac7b9d894330767efc2fdb6c497f7ba65f46a0b52f670"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-008.bin",
+        "size": 41943040,
+        "sha256": "6fb1936dcebced140e2a88de154cec40a44793c6226e576eea3fd32f22d64af5"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-009.bin",
+        "size": 41943040,
+        "sha256": "b27d986d17bf3b1fd287fd94b137ab60435619fbbab221d3466eaf649f8259f5"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-010.bin",
+        "size": 41943040,
+        "sha256": "e63ca1190d0cf182c435e1f8332ee392c465a660d0637f28cac936c45083a2b2"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-011.bin",
+        "size": 41943040,
+        "sha256": "95c5099c20a6620336b9264766c3f624ff3a1620c83375f558036a8ddb2b94ef"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-012.bin",
+        "size": 41943040,
+        "sha256": "a6c9c536f397dc447c05ba448b91538cef16a7a85b02ec8cb6d186ed1e749107"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-013.bin",
+        "size": 41943040,
+        "sha256": "123699de2abac73f0f1d7113c34b7c0f1a6401b63dc619542c216e74d6d62c3c"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-014.bin",
+        "size": 41943040,
+        "sha256": "2a42444504afc08c5f6191435cd18e6372c86537e094b87ea3f44b2fe7e6aad3"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-015.bin",
+        "size": 41943040,
+        "sha256": "7801fd3ded60eb0c4edc7b852ed0dd509db2c4231c384113ff1ea623ceb41e4b"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-016.bin",
+        "size": 41943040,
+        "sha256": "12b965b13edb5b422815d88f6663e15adc49ec680a08858d7e66c36c2fc89cdf"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-017.bin",
+        "size": 41943040,
+        "sha256": "08363b68280fddfe25c2c6dd5f5b050b342de0c5a39956615618007c2db970bd"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-018.bin",
+        "size": 41943040,
+        "sha256": "03bbdf759ea503c068a8fbd9da0d9af25e87b4e7015fa068b4a896697f99bfb7"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-019.bin",
+        "size": 41943040,
+        "sha256": "d11f5582eb4486362c8597f90eed8b7b5d4f67f485038d57f4626f54f932fe3e"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-browser/main/public-site/data/base-020.bin",
+        "size": 29422475,
+        "sha256": "7dc2e8a1fab297fe0454fcee6281380def355fc3517fdeec053ae7043fd05b88"
+      }
+    ],
+    "bytes": 868283275,
+    "files": 1215
+  },
+  "springCollab": {
+    "id": "spring-collab-v1.7.10",
+    "chunks": [
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-000.bin",
+        "size": 41943040,
+        "sha256": "7015ebeda140f2a05b741fed6baa5ea8fa221372292eec58b30bd597a39694e3"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-001.bin",
+        "size": 41943040,
+        "sha256": "cdebb9391e78da29bfc134a424396185a299af8fb5fa7bfd395712e156ae0537"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-002.bin",
+        "size": 41943040,
+        "sha256": "defdea34260e755237a302d398ffa817b15cdf35a3c1dd1b5e817d20e7f9d0fd"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-003.bin",
+        "size": 41943040,
+        "sha256": "232ac96b19b6c6f8e536625e8923697c097359151c6a06005b8f9b5dbf7bae98"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-004.bin",
+        "size": 41943040,
+        "sha256": "cbf6fb50e583a7bcf710b9b1a8bc4f936b4c231be7f54d67e2fe41bb48631f23"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-005.bin",
+        "size": 41943040,
+        "sha256": "cb6ac526297416f806820d7ed33d82c981f4162c68af7d9ff3bb82aca4ae60f0"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-006.bin",
+        "size": 41943040,
+        "sha256": "7022ecbeb98e306c270e624056da7a9cc644f8e13dd567eef1f801444debc0fe"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-007.bin",
+        "size": 41943040,
+        "sha256": "aa3bccc9bf6012375a9ce8789eb526be5586081778da680aa9aec110dbf9e039"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-008.bin",
+        "size": 41943040,
+        "sha256": "08533b12585df01187190e30731f1d5d50cb4bc2575391a1401df19951851973"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-009.bin",
+        "size": 41943040,
+        "sha256": "1b4cd001af9b99ffd7f92204fade4e26396283b575f77c89ab89a2eae420fc1d"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-010.bin",
+        "size": 41943040,
+        "sha256": "6532f16538d59a5c83b27d3338cf5773a8a94360407ee2df393ea545289e497b"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-011.bin",
+        "size": 41943040,
+        "sha256": "d8bd2b397ff9dc04a3e99dc200c32e18a3ebac53fad6877ca3da1e275c658cd0"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-012.bin",
+        "size": 41943040,
+        "sha256": "87de704a939727f5aee5182d1ac4066ecdb9b38298373cdd3a6c91ef7a20b372"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-013.bin",
+        "size": 41943040,
+        "sha256": "fd53c8bcc05a6e6dd36de00a50b5399ed7e9ac287f44d50ea25965d4f53f416f"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-014.bin",
+        "size": 12277009,
+        "sha256": "90846ac0f3e6ab0bf2212630bd42c34d9aeec7409c6ffbb7f4d6ff414a631e52"
+      }
+    ],
+    "bytes": 599479569,
+    "files": 77
+  }
+}
