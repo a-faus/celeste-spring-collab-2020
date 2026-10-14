@@ -194,15 +194,39 @@
     "files": 77
   },
   "maxHelpingHandPatch": {
-    "id": "maxhelpinghand-1.40.10-everest-4607-skip-incompatible-il-hooks-v3",
+    "id": "maxhelpinghand-1.38.0-everest-4607-guard-legacy-detours-v4",
     "chunks": [
       {
-        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-mhh-hooks-v3-000.bin",
-        "size": 694486,
-        "sha256": "d151c31745362a21974db4b9501fe841345586727e5c1c268e532cdb214c979b"
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-mhh-everest-1380-v4-000.bin",
+        "size": 604586,
+        "sha256": "815deff825b136d93fb1c0ba340418f4ce9b253acb7706131ccc486b16d0d5a3"
       }
     ],
-    "bytes": 694486,
+    "bytes": 604586,
+    "files": 1
+  },
+  "isaGrabBagPatch": {
+    "id": "isagrabbag-1.7.3-remove-missing-optional-bingoui-v1",
+    "chunks": [
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-isagrabbag-v1-000.bin",
+        "size": 122101,
+        "sha256": "de8c4a2d909e782db3087e4919e219d284ab7940fd130865f75f784c5f698c9f"
+      }
+    ],
+    "bytes": 122101,
+    "files": 1
+  },
+  "trackerStartupPatch": {
+    "id": "spring-collab-tracker-wrap-v6",
+    "chunks": [
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-tracker-wrap-v6-000.bin",
+        "size": 2372633,
+        "sha256": "f14b20c42b9d60f28b096014ef90616cb0ab12cc01d14f352faac4a4a4cd5c37"
+      }
+    ],
+    "bytes": 2372633,
     "files": 1
   }
 }

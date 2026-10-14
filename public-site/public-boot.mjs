@@ -120,7 +120,7 @@ async function start() {
     return;
   }
   const root = await (await navigator.storage.getDirectory()).getDirectoryHandle(namespace, {create:true});
-  const response = await fetch('./package-manifest.json?mhh-hook-isolation-v3');
+  const response = await fetch('./package-manifest.json?spring-collab-mhh-1380-v5');
   if (!response.ok) throw new Error('Could not download the game manifest.');
   const manifest = await response.json();
   title.textContent = mode === 'spring-collab' ? 'Preparing Spring Collab 2020' : 'Preparing Celeste';
@@ -133,6 +133,12 @@ async function start() {
     // not have to download the entire Spring Collab archive again.
     if (manifest.maxHelpingHandPatch) {
       await install(root, manifest.maxHelpingHandPatch, 'Spring Collab compatibility update', 0, 100);
+    }
+    if (manifest.isaGrabBagPatch) {
+      await install(root, manifest.isaGrabBagPatch, 'Spring Collab dependency update', 0, 100);
+    }
+    if (manifest.trackerStartupPatch) {
+      await install(root, manifest.trackerStartupPatch, 'Spring Collab startup update', 0, 100);
     }
   }
   status.textContent = 'Preserving existing progress and preparing shared saves…';

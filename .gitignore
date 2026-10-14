@@ -16,3 +16,5 @@ tools/*
 !tools/SpringCollab2020Compat.dll
 !tools/patch-mhh.csproj
 !tools/PatchMaxHelpingHand.cs
+!tools/build_mhh_compat_patch.py
+!tools/build_isagrabbag_patch.py

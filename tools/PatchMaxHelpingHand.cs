@@ -94,6 +94,61 @@ if (args.Length == 4 && args[0] == "--patch-spring")
     return 0;
 }
 
+if (args.Length == 3 && args[0] == "--guard-mhh-legacy-hooks")
+{
+    using var mhh = AssemblyDefinition.ReadAssembly(args[1]);
+    var methods = mhh.MainModule.Types.SelectMany(Flatten).SelectMany(type => type.Methods)
+        .Where(method => method.HasBody).ToArray();
+    var unsafeMethods = new HashSet<string>(methods
+        .Where(method => method.Body.Instructions.Any(instruction => instruction.OpCode == OpCodes.Newobj
+            && instruction.Operand is MethodReference reference
+            && reference.DeclaringType.FullName == "MonoMod.RuntimeDetour.DetourContext"
+            && reference.Name == ".ctor"))
+        .Select(method => method.FullName), StringComparer.Ordinal);
+
+    // Include every MHH helper that directly calls a helper with the obsolete
+    // constructor. This follows the managed call graph without rewriting IL.
+    bool changed;
+    do
+    {
+        changed = false;
+        foreach (var method in methods)
+        {
+            if (unsafeMethods.Contains(method.FullName)) continue;
+            if (!method.Body.Instructions.Any(instruction => instruction.Operand is MethodReference reference
+                    && unsafeMethods.Contains(reference.FullName))) continue;
+            changed |= unsafeMethods.Add(method.FullName);
+        }
+    } while (changed);
+
+    var guardedCalls = new List<(MethodDefinition Owner, Instruction Call)>();
+    foreach (var method in methods)
+    {
+        foreach (var instruction in method.Body.Instructions.ToArray())
+        {
+            if ((instruction.OpCode != OpCodes.Call && instruction.OpCode != OpCodes.Callvirt)
+                || instruction.Operand is not MethodReference reference
+                || !unsafeMethods.Contains(reference.FullName)
+                || reference.ReturnType.MetadataType != MetadataType.Void
+                || reference.Parameters.Count != 0)
+                continue;
+            if (!reference.DeclaringType.FullName.StartsWith("Celeste.Mod.MaxHelpingHand.", StringComparison.Ordinal))
+                continue;
+            guardedCalls.Add((method, instruction));
+        }
+    }
+
+    if (unsafeMethods.Count == 0 || guardedCalls.Count == 0)
+        throw new InvalidOperationException($"Could not find a safe guard point for legacy MaxHelpingHand hooks (unsafe methods: {unsafeMethods.Count}, call sites: {guardedCalls.Count}).");
+
+    foreach (var (owner, call) in guardedCalls)
+        GuardCall(mhh, owner, call);
+
+    mhh.Write(args[2]);
+    Console.WriteLine($"Added exception guards at {guardedCalls.Count} zero-argument MaxHelpingHand calls reaching legacy DetourContext hooks ({unsafeMethods.Count} affected methods). Output {args[2]}");
+    return 0;
+}
+
 if (args.Length == 3 && args[0] == "--disable-mhh-hooks")
 {
     using var compatAssembly = AssemblyDefinition.ReadAssembly(args[1]);
@@ -186,7 +241,7 @@ if (args.Length == 3 && args[0] == "--skip-incompatible-il-hooks")
 
 if (args.Length != 2)
 {
-    Console.Error.WriteLine("usage: PatchMaxHelpingHand <original.dll> <compat.dll> OR --patch-spring <original.dll> <MonoMod.RuntimeDetour.dll> <compat.dll> OR --disable-mhh-hooks <input.dll> <output.dll> OR --skip-incompatible-il-hooks <input.dll> <output.dll> OR --list-hooks <original.dll> OR --show-method <original.dll> <name-fragment> OR --find-ref <original.dll> <name-fragment> OR --show-type <assembly.dll> <type-name>");
+    Console.Error.WriteLine("usage: PatchMaxHelpingHand <original.dll> <compat.dll> OR --patch-spring <original.dll> <MonoMod.RuntimeDetour.dll> <compat.dll> OR --guard-mhh-legacy-hooks <input.dll> <output.dll> OR --disable-mhh-hooks <input.dll> <output.dll> OR --skip-incompatible-il-hooks <input.dll> <output.dll> OR --list-hooks <original.dll> OR --show-method <original.dll> <name-fragment> OR --find-ref <original.dll> <name-fragment> OR --show-type <assembly.dll> <type-name>");
     return 2;
 }
 
@@ -206,7 +261,7 @@ if (moduleCalls.Length == 0)
     throw new InvalidOperationException("No MaxHelpingHand module initialization calls were found.");
 
 foreach (var call in moduleCalls)
-    GuardCall(moduleLoad, call);
+    GuardCall(assembly, moduleLoad, call);
 
 // MaxHelpingHand 1.40.10 was built for a newer Everest/MonoMod runtime. Its
 // individual IL hooks can throw while Everest calls HookMods from LoadContent,
@@ -226,13 +281,13 @@ if (hookCalls.Length == 0)
     throw new InvalidOperationException("No MaxHelpingHand hook setup calls were found.");
 
 foreach (var call in hookCalls)
-    GuardCall(hookMods, call);
+    GuardCall(assembly, hookMods, call);
 
 assembly.Write(args[1]);
 Console.WriteLine($"Added exception isolation around {moduleCalls.Length} MaxHelpingHand helper initializers and {hookCalls.Length} hook setup calls. Output {args[1]}");
 return 0;
 
-void GuardCall(MethodDefinition method, Instruction call)
+void GuardCall(AssemblyDefinition targetAssembly, MethodDefinition method, Instruction call)
 {
     var body = method.Body;
     var after = Instruction.Create(OpCodes.Nop);
@@ -244,7 +299,7 @@ void GuardCall(MethodDefinition method, Instruction call)
     processor.InsertAfter(normalExit, catchStart);
     processor.InsertAfter(catchStart, catchExit);
     processor.InsertAfter(catchExit, after);
-    var exceptionType = new TypeReference("System", "Exception", assembly.MainModule, assembly.MainModule.TypeSystem.CoreLibrary, false);
+    var exceptionType = new TypeReference("System", "Exception", targetAssembly.MainModule, targetAssembly.MainModule.TypeSystem.CoreLibrary, false);
     body.ExceptionHandlers.Insert(0, new ExceptionHandler(ExceptionHandlerType.Catch)
     {
         TryStart = call,
