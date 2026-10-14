@@ -192,5 +192,17 @@
     ],
     "bytes": 598811737,
     "files": 77
+  },
+  "maxHelpingHandPatch": {
+    "id": "maxhelpinghand-1.40.10-everest-4607-isolated-hooks-v1",
+    "chunks": [
+      {
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-mhh-hooks-v1-000.bin",
+        "size": 695040,
+        "sha256": "ac9c7d86899cadc01c41d9237b0d8a5304feffc70e015171fd701a2bf4785bc9"
+      }
+    ],
+    "bytes": 695040,
+    "files": 1
   }
 }

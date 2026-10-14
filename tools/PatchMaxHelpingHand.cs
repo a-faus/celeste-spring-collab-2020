@@ -118,8 +118,28 @@ if (moduleCalls.Length == 0)
 foreach (var call in moduleCalls)
     GuardCall(moduleLoad, call);
 
+// MaxHelpingHand 1.40.10 was built for a newer Everest/MonoMod runtime. Its
+// individual IL hooks can throw while Everest calls HookMods from LoadContent,
+// which otherwise aborts Celeste's first frame. Isolate each MHH hook setup so
+// a runtime-incompatible helper is skipped without stopping the remaining
+// helpers or the game startup.
+var hookMods = moduleType.Methods.SingleOrDefault(method => method.Name == "HookMods" && method.Parameters.Count == 0 && method.HasBody);
+if (hookMods is null)
+    throw new InvalidOperationException("MaxHelpingHandModule.HookMods() was not found.");
+
+var hookCalls = hookMods.Body.Instructions
+    .Where(instruction => instruction.OpCode == OpCodes.Call && instruction.Operand is MethodReference reference
+        && reference.ReturnType.MetadataType == MetadataType.Void
+        && reference.DeclaringType.FullName.StartsWith("Celeste.Mod.MaxHelpingHand.", StringComparison.Ordinal))
+    .ToArray();
+if (hookCalls.Length == 0)
+    throw new InvalidOperationException("No MaxHelpingHand hook setup calls were found.");
+
+foreach (var call in hookCalls)
+    GuardCall(hookMods, call);
+
 assembly.Write(args[1]);
-Console.WriteLine($"Added exception isolation around {moduleCalls.Length} MaxHelpingHand helper initialization calls. Output {args[1]}");
+Console.WriteLine($"Added exception isolation around {moduleCalls.Length} MaxHelpingHand helper initializers and {hookCalls.Length} hook setup calls. Output {args[1]}");
 return 0;
 
 void GuardCall(MethodDefinition method, Instruction call)

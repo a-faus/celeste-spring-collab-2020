@@ -120,14 +120,21 @@ async function start() {
     return;
   }
   const root = await (await navigator.storage.getDirectory()).getDirectoryHandle(namespace, {create:true});
-  const response = await fetch('./package-manifest.json');
+  const response = await fetch('./package-manifest.json?mhh-hook-isolation-v1');
   if (!response.ok) throw new Error('Could not download the game manifest.');
   const manifest = await response.json();
   title.textContent = mode === 'spring-collab' ? 'Preparing Spring Collab 2020' : 'Preparing Celeste';
   await navigator.storage.persist?.().catch(() => false);
   const hasCollab = mode === 'spring-collab';
   await install(root, manifest.base, 'Celeste', hasCollab ? 0.8 : 1, 0);
-  if (hasCollab) await install(root, manifest.springCollab, 'Spring Collab 2020 and required files', 0.2, 80);
+  if (hasCollab) {
+    await install(root, manifest.springCollab, 'Spring Collab 2020 and required files', 0.2, 80);
+    // Apply small compatibility overlays separately so existing installs do
+    // not have to download the entire Spring Collab archive again.
+    if (manifest.maxHelpingHandPatch) {
+      await install(root, manifest.maxHelpingHandPatch, 'Spring Collab compatibility update', 0, 100);
+    }
+  }
   status.textContent = 'Preserving existing progress and preparing shared saves…';
   await migrateSharedSaves(await navigator.storage.getDirectory());
   await installSaveRouting(mode);
