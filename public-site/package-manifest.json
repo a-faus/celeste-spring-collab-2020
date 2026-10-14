@@ -194,15 +194,15 @@
     "files": 77
   },
   "maxHelpingHandPatch": {
-    "id": "maxhelpinghand-1.40.10-everest-4607-skip-incompatible-hooks-v2",
+    "id": "maxhelpinghand-1.40.10-everest-4607-skip-incompatible-il-hooks-v3",
     "chunks": [
       {
-        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-mhh-hooks-v2-000.bin",
-        "size": 696054,
-        "sha256": "2f66802a8cf2a10ca7397fa85728f005033336518915a71d8baaf88eaa6524c4"
+        "url": "https://raw.githubusercontent.com/a-faus/celeste-spring-collab-2020/main/game-assets/spring-collab-mhh-hooks-v3-000.bin",
+        "size": 694486,
+        "sha256": "d151c31745362a21974db4b9501fe841345586727e5c1c268e532cdb214c979b"
       }
     ],
-    "bytes": 696054,
+    "bytes": 694486,
     "files": 1
   }
 }

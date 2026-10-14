@@ -120,7 +120,7 @@ async function start() {
     return;
   }
   const root = await (await navigator.storage.getDirectory()).getDirectoryHandle(namespace, {create:true});
-  const response = await fetch('./package-manifest.json?mhh-hook-isolation-v2');
+  const response = await fetch('./package-manifest.json?mhh-hook-isolation-v3');
   if (!response.ok) throw new Error('Could not download the game manifest.');
   const manifest = await response.json();
   title.textContent = mode === 'spring-collab' ? 'Preparing Spring Collab 2020' : 'Preparing Celeste';

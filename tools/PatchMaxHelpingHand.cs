@@ -115,9 +115,78 @@ if (args.Length == 3 && args[0] == "--disable-mhh-hooks")
     return 0;
 }
 
+if (args.Length == 3 && args[0] == "--skip-incompatible-il-hooks")
+{
+    using var compatAssembly = AssemblyDefinition.ReadAssembly(args[1]);
+    var compatModuleType = compatAssembly.MainModule.GetType("Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule")
+        ?? throw new InvalidOperationException("MaxHelpingHandModule was not found.");
+    var compatHookMods = compatModuleType.Methods.SingleOrDefault(method => method.Name == "HookMods" && method.Parameters.Count == 0 && method.HasBody)
+        ?? throw new InvalidOperationException("MaxHelpingHandModule.HookMods() was not found.");
+    compatHookMods.Body.ExceptionHandlers.Clear();
+    compatHookMods.Body.Instructions.Clear();
+    compatHookMods.Body.Variables.Clear();
+    compatHookMods.Body.InitLocals = false;
+    compatHookMods.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+
+    var ilEventCalls = 0;
+    var ilHookConstructors = 0;
+    var ilHookDisposals = 0;
+    foreach (var method in compatAssembly.MainModule.Types.SelectMany(Flatten).SelectMany(type => type.Methods).Where(method => method.HasBody))
+    {
+        var processor = method.Body.GetILProcessor();
+        foreach (var instruction in method.Body.Instructions.ToArray())
+        {
+            if (instruction.Operand is not MethodReference reference) continue;
+
+            if ((instruction.OpCode == OpCodes.Call || instruction.OpCode == OpCodes.Callvirt)
+                && reference.DeclaringType.FullName.StartsWith("IL.", StringComparison.Ordinal)
+                && (reference.Name.StartsWith("add_", StringComparison.Ordinal) || reference.Name.StartsWith("remove_", StringComparison.Ordinal)))
+            {
+                // The event accessor consumes the delegate on the evaluation stack.
+                // Pop it instead of registering an IL manipulator incompatible with Webleste's MonoMod runtime.
+                instruction.OpCode = OpCodes.Pop;
+                instruction.Operand = null;
+                ilEventCalls++;
+            }
+            else if (instruction.OpCode == OpCodes.Newobj
+                && reference.DeclaringType.FullName == "MonoMod.RuntimeDetour.ILHook"
+                && reference.Name == ".ctor")
+            {
+                // Manual ILHook sites push a MethodBase and manipulator; consume both
+                // and leave null for the following field/local store.
+                if (reference.Parameters.Count != 2)
+                    throw new InvalidOperationException($"Unexpected ILHook constructor in {method.FullName}: {reference.FullName}");
+                instruction.OpCode = OpCodes.Pop;
+                instruction.Operand = null;
+                var secondPop = processor.Create(OpCodes.Pop);
+                var nullReference = processor.Create(OpCodes.Ldnull);
+                processor.InsertAfter(instruction, secondPop);
+                processor.InsertAfter(secondPop, nullReference);
+                ilHookConstructors++;
+            }
+            else if ((instruction.OpCode == OpCodes.Call || instruction.OpCode == OpCodes.Callvirt)
+                && reference.DeclaringType.FullName == "MonoMod.RuntimeDetour.ILHook"
+                && reference.Name == "Dispose"
+                && reference.Parameters.Count == 0)
+            {
+                // Matching hook fields are null after construction was skipped.
+                instruction.OpCode = OpCodes.Pop;
+                instruction.Operand = null;
+                ilHookDisposals++;
+            }
+        }
+    }
+
+    if (ilEventCalls == 0 && ilHookConstructors == 0)
+        throw new InvalidOperationException("No MaxHelpingHand IL hook registrations were found.");
+    compatAssembly.Write(args[2]);
+    Console.WriteLine($"Skipped {ilEventCalls} IL hook event accessors, {ilHookConstructors} manual ILHook constructors, and {ilHookDisposals} ILHook disposals; disabled MaxHelpingHand HookMods(). Output {args[2]}");
+    return 0;
+}
+
 if (args.Length != 2)
 {
-    Console.Error.WriteLine("usage: PatchMaxHelpingHand <original.dll> <compat.dll> OR --patch-spring <original.dll> <MonoMod.RuntimeDetour.dll> <compat.dll> OR --disable-mhh-hooks <input.dll> <output.dll> OR --list-hooks <original.dll> OR --show-method <original.dll> <name-fragment> OR --find-ref <original.dll> <name-fragment> OR --show-type <assembly.dll> <type-name>");
+    Console.Error.WriteLine("usage: PatchMaxHelpingHand <original.dll> <compat.dll> OR --patch-spring <original.dll> <MonoMod.RuntimeDetour.dll> <compat.dll> OR --disable-mhh-hooks <input.dll> <output.dll> OR --skip-incompatible-il-hooks <input.dll> <output.dll> OR --list-hooks <original.dll> OR --show-method <original.dll> <name-fragment> OR --find-ref <original.dll> <name-fragment> OR --show-type <assembly.dll> <type-name>");
     return 2;
 }
 
