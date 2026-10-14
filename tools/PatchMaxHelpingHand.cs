@@ -94,9 +94,30 @@ if (args.Length == 4 && args[0] == "--patch-spring")
     return 0;
 }
 
+if (args.Length == 3 && args[0] == "--disable-mhh-hooks")
+{
+    using var compatAssembly = AssemblyDefinition.ReadAssembly(args[1]);
+    var compatModuleType = compatAssembly.MainModule.GetType("Celeste.Mod.MaxHelpingHand.Module.MaxHelpingHandModule")
+        ?? throw new InvalidOperationException("MaxHelpingHandModule was not found.");
+    var compatHookMods = compatModuleType.Methods.SingleOrDefault(method => method.Name == "HookMods" && method.Parameters.Count == 0 && method.HasBody)
+        ?? throw new InvalidOperationException("MaxHelpingHandModule.HookMods() was not found.");
+
+    // Webleste's newer MonoMod runtime cannot safely apply several MHH IL hooks.
+    // Skip only runtime hook registration; keep module loading, map entities,
+    // triggers, assets, and other content initialization intact.
+    compatHookMods.Body.ExceptionHandlers.Clear();
+    compatHookMods.Body.Instructions.Clear();
+    compatHookMods.Body.Variables.Clear();
+    compatHookMods.Body.InitLocals = false;
+    compatHookMods.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+    compatAssembly.Write(args[2]);
+    Console.WriteLine($"Disabled MaxHelpingHand runtime hook registration in {compatHookMods.FullName}. Output {args[2]}");
+    return 0;
+}
+
 if (args.Length != 2)
 {
-    Console.Error.WriteLine("usage: PatchMaxHelpingHand <original.dll> <compat.dll> OR --patch-spring <original.dll> <MonoMod.RuntimeDetour.dll> <compat.dll> OR --list-hooks <original.dll> OR --show-method <original.dll> <name-fragment> OR --find-ref <original.dll> <name-fragment> OR --show-type <assembly.dll> <type-name>");
+    Console.Error.WriteLine("usage: PatchMaxHelpingHand <original.dll> <compat.dll> OR --patch-spring <original.dll> <MonoMod.RuntimeDetour.dll> <compat.dll> OR --disable-mhh-hooks <input.dll> <output.dll> OR --list-hooks <original.dll> OR --show-method <original.dll> <name-fragment> OR --find-ref <original.dll> <name-fragment> OR --show-type <assembly.dll> <type-name>");
     return 2;
 }
 
